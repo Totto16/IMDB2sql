@@ -1,20 +1,20 @@
 from argparse import ArgumentParser
-from os import getcwd
-from os.path import join
 from pathlib import Path
+from typing import cast
 
-from src.utils import get_config, get_data_sets
+from src.types import CommandArgs
+from src.utils import get_config, get_data_sets, get_links
 
-CONFIG = get_config(join(getcwd(), "config", "config.yml"))
+CONFIG = get_config(Path.cwd() / "config" / "config.yml")
 
 
-def main(cmd_args):
+def main(cmd_args: CommandArgs) -> None:
     if cmd_args.download or cmd_args.extract:
         import urllib.request
-        from src.utils import get_config, get_links
+
         from src.dataset_handler import DataSetsHandler
 
-        with urllib.request.urlopen(CONFIG["data_sets_url"]) as response:
+        with urllib.request.urlopen(CONFIG["data_sets_url"]) as response:  # noqa: S310
             imdb_page_content = response.read()
 
         data_sets = get_data_sets(
@@ -66,8 +66,7 @@ if __name__ == "__main__":
     )
     cmd_line_parser.add_argument("--debug", "-dd", action="store_true")
     cmd_line_parser.add_argument("--quiet", "-q", action="store_true")
-    args = cmd_line_parser.parse_args()
-    print(args)
+    args = cast(CommandArgs, cmd_line_parser.parse_args())
     main(args)
 
 # TODO: implement click for better cli experience

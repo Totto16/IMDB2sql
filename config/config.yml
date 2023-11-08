@@ -1,10 +1,13 @@
 data_sets_url: "https://datasets.imdbws.com"
 dataset_file_ext: "gz"
 dataset_paths:
-  film: "title.basics.tsv"
-  person: "name.basics.tsv"
-  principal: "title.principals.tsv"
-  rating: "title.ratings.tsv"
+    film: "title.basics.tsv"
+    person: "name.basics.tsv"
+    principal: "title.principals.tsv"
+    alternative: "title.akas.tsv"
+    rating: "title.ratings.tsv"
+    crew: "title.crew.tsv"
+    episode: title.episode.tsv.gz
 dataset_delimiter: "\t"
 default_database_uri: "postgresql://postgres:example@127.0.0.1:5433/postgres"
 csv_extension: "csv"

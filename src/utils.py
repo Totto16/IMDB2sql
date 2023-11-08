@@ -4,7 +4,8 @@ import sys
 import tempfile
 import urllib.parse
 from pathlib import Path
-from typing import List, Dict, Union
+from typing import Any, Literal, Optional, TypedDict, Union, cast
+from bs4 import ResultSet
 
 import yaml
 
@@ -13,12 +14,34 @@ CURSOR_UP_ONE = "\x1b[1A"
 ERASE_LINE = "\x1b[2K"
 
 
-def get_config(config_path):
+class DataSetPaths(TypedDict):
+    film: Optional[str]
+    person: Optional[str]
+    principal: Optional[str]
+    alternative: Optional[str]
+    rating: Optional[str]
+    crew: Optional[str]
+    episode: Optional[str]
+
+DataSetKeys = Literal["film","person","principal","alternative","rating","crew","episode"]
+
+
+class Config(TypedDict):
+    data_sets_url: str
+    dataset_file_ext: str
+    dataset_paths: DataSetPaths
+    dataset_delimiter: str
+    default_database_uri: str
+    csv_extension: str
+    film_filter: list[str]
+
+
+def get_config(config_path: Path) -> Config:
     with open(config_path) as cfg:
-        return yaml.load(cfg, Loader=yaml.FullLoader)
+        return cast(Config, yaml.load(cfg, Loader=yaml.FullLoader))
 
 
-def get_links(dataset_index_page_content: str, config: Dict) -> List:
+def get_links(dataset_index_page_content: str, config: Config) -> list[str]:
     from bs4 import BeautifulSoup
 
     bs_obj = BeautifulSoup(dataset_index_page_content, "html.parser")
@@ -27,7 +50,7 @@ def get_links(dataset_index_page_content: str, config: Dict) -> List:
     ]
 
 
-def _filter_links(link, config) -> bool:
+def _filter_links(link: ResultSet[Any], config: Config) -> bool:
     dataset_files = [
         f"{el}.{config['dataset_file_ext']}" for el in config["dataset_paths"].values()
     ]
@@ -42,9 +65,9 @@ class DataSet:
 
 
 def get_data_sets(
-    urls: List[str], root: Path = Path(tempfile.gettempdir())
-) -> List[DataSet]:
-    _ret_val = []
+    urls: list[str], root: Path = Path(tempfile.gettempdir())
+) -> list[DataSet]:
+    _ret_val: list[DataSet] = []
     for url in urls:
         path = urllib.parse.urlparse(url).path
         if file_path_re := DATA_SET_FILENAME_PATTERN.search(path):
@@ -57,7 +80,7 @@ def get_data_sets(
     return _ret_val
 
 
-def overwrite_upper_line(content: str, quiet=False):
+def overwrite_upper_line(content: str, quiet: bool = False) -> None:
     """
     Output string content in the current line by overwriting
     :param content: string content
@@ -82,7 +105,7 @@ def get_int(id_: str) -> Union[int, None]:
         return None
 
 
-def get_null(value: str):
+def get_null(value: str) -> str:
     if value.strip() not in ["\\N", ""]:
         return value
     return "0"

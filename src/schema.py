@@ -1,3 +1,4 @@
+from typing import Optional
 import graphene
 from graphene_sqlalchemy import SQLAlchemyObjectType
 from sqlalchemy.sql.functions import count
@@ -20,7 +21,9 @@ class FilmType(ActiveSQLAlchemyObjectType):
         lambda: PersonType, search=graphene.String(), profession=graphene.String()
     )
 
-    def resolve_persons(self, info, search: str = None, profession=None):
+    def resolve_persons(
+        self, info, search: Optional[str] = None, profession: Optional[str] = None
+    ):
         query = PersonType.get_query(info)
         return (
             query.join(models.ProfessionPerson)

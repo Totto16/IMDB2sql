@@ -7,11 +7,11 @@ from unittest import mock
 from src import models
 from src.dataset_loader import DatasetLoader
 from src.dataset_parser import DatasetParser
-from src.utils import get_config
+from src.utils import Config, get_config
 from tests.utils import get_root_dir, CONFIG_REL_PATH, DATASETS_REL_PATH
 
-CONFIG = get_config(get_root_dir() / CONFIG_REL_PATH)
-DATASET_DIR = get_root_dir() / DATASETS_REL_PATH
+CONFIG: Config = get_config(get_root_dir() / CONFIG_REL_PATH)
+DATASET_DIR: Path = get_root_dir() / DATASETS_REL_PATH
 
 
 class TestDataSetLoader(unittest.TestCase):

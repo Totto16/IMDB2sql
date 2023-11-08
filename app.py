@@ -11,7 +11,7 @@ from src.utils import get_config
 CONFIG = get_config(Path(Path(getcwd()) / "config" / "config.yml"))
 
 
-def create_app(config=CONFIG):
+def create_app(config=CONFIG) -> Flask:
     app = Flask(__name__, template_folder="src/templates", static_folder="src/static")
     app.debug = True
     app.config["SQLALCHEMY_DATABASE_URI"] = config["default_database_uri"]
@@ -24,7 +24,7 @@ def create_app(config=CONFIG):
     )
 
     @app.route("/")
-    def index():
+    def index() -> str:
         return render_template("index.html")
 
     return app

@@ -2,9 +2,10 @@ from functools import partial
 from glob import glob
 from multiprocessing import Pool, cpu_count
 from pathlib import Path
-from typing import Dict, List, Tuple
+from typing import List, Tuple
 
 import src.models as models
+from src.utils import Config
 
 
 def get_table_object(table):
@@ -22,7 +23,7 @@ def get_table_object(table):
 
 
 class DatasetLoader:
-    def __init__(self, cmd_args, config: Dict):
+    def __init__(self, cmd_args, config: Config):
         self.root = Path(cmd_args.root)
         self.db_uri = cmd_args.dburi
         self.resume = cmd_args.resume

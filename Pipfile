@@ -1,0 +1,40 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+beautifulsoup4 = "*"
+flask = "*"
+flask-graphql = "*"
+flask-migrate = "*"
+flask-sqlalchemy = "*"
+# graphene-sqlalchemy = "*"
+# docker-compose = "*"
+psutil = "*"
+psycopg2-binary = "*"
+pytest = "*"
+pyyaml = "*"
+requests = "*"
+tqdm = "*"
+validators = "*"
+
+[dev-packages]
+pylint = "*"
+mypy = "*"
+flake8 = "*"
+black = "*"
+ruff = "*"
+types-pyyaml = "*"
+types-tqdm = "*"
+types-requests = "*"
+types-beautifulsoup4 = "*"
+
+[scripts]
+lint = "bash -c 'pipenv run mypy && pipenv run ruff'"
+lint_2 = "mypy src/ app.py run.py --install-types"
+mypy = "mypy src/ app.py run.py --strict --ignore-missing-imports --warn-unreachable"
+ruff = "ruff check src/ app.py run.py"
+
+[requires]
+python_version = "3.10"
